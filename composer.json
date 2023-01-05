@@ -1,6 +1,7 @@
 {
     "name": "raditor/helper",
     "type": "library",
+    "description": "a simple helper for laravel api :)",
      "autoload": {
         "files": [
             "src/helpers.php"
