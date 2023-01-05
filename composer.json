@@ -1,0 +1,16 @@
+{
+    "name": "raditor/helper",
+    "type": "library",
+     "autoload": {
+        "files": [
+            "src/helpers.php"
+        ]
+    },
+    "authors": [
+        {
+            "name": "Radhitka",
+            "email": "raditfatner47@gmail.com"
+        }
+    ],
+    "require": {}
+}
