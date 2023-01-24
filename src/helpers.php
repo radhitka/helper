@@ -35,6 +35,8 @@ if (!function_exists('responseSuccess')) {
             $body = array_merge(['status' => true, 'message' => 'Success'], $body);
         }
 
+        $body = array_merge(['status_code' => $http, 'status_message' => Response::$statusTexts[$http]], $body);
+
         return responseJson($body, $http);
     }
 }
@@ -43,7 +45,9 @@ if (!function_exists('responseNotFound')) {
 
     function responseNotFound(string $message = 'Data tidak ada', $http = Response::HTTP_NOT_FOUND)
     {
-        return responseJson(['status' => false, 'message' => $message], $http);
+        $body = array_merge(['status_code' => $http, 'status_message' => Response::$statusTexts[$http]]);
+
+        return responseJson(array_merge($body, ['status' => false, 'message' => $message]), $http);
     }
 }
 
@@ -51,7 +55,9 @@ if (!function_exists('responseError')) {
 
     function responseError(string $message = 'Error', $http = Response::HTTP_INTERNAL_SERVER_ERROR)
     {
-        return responseJson(['status' => false, 'message' => $message], $http);
+        $body = array_merge(['status_code' => $http, 'status_message' => Response::$statusTexts[$http]]);
+
+        return responseJson(array_merge($body, ['status' => false, 'message' => $message]), $http);
     }
 }
 
