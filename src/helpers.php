@@ -61,6 +61,16 @@ if (!function_exists('responseError')) {
     }
 }
 
+if (!function_exists('responseUnauthorized')) {
+
+    function responseUnauthorized(string $message = 'Unauthorized', $http = Response::HTTP_UNAUTHORIZED)
+    {
+        $body = array_merge(['status_code' => $http, 'status_message' => Response::$statusTexts[$http]]);
+
+        return responseJson(array_merge($body, ['status' => false, 'message' => $message]), $http);
+    }
+}
+
 if (!function_exists('translatedFormat')) {
 
     function translatedFormat($date, $format = 'd F Y')
