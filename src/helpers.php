@@ -41,13 +41,19 @@ if (!function_exists('responseSuccess')) {
     }
 }
 
-if (!function_exists('responseNotFound')) {
+if (!function_exists('responseSuccessOk')) {
 
-    function responseNotFound(string $message = 'Data tidak ada', $http = Response::HTTP_NOT_FOUND)
+    function responseSuccessOk(string|array $body = [])
     {
-        $body = array_merge(['status_code' => $http, 'status_message' => Response::$statusTexts[$http]]);
+        return responseSuccess($body, Response::HTTP_OK);
+    }
+}
 
-        return responseJson(array_merge($body, ['status' => false, 'message' => $message]), $http);
+if (!function_exists('responseSuccessCreated')) {
+
+    function responseSuccessCreated(string|array $body = [])
+    {
+        return responseSuccess($body, Response::HTTP_CREATED);
     }
 }
 
@@ -61,13 +67,51 @@ if (!function_exists('responseError')) {
     }
 }
 
+if (!function_exists('responseInternalServerError')) {
+
+    function responseInternalServerError(string $message = 'Internal Server Error')
+    {
+        return responseError($message, Response::HTTP_INTERNAL_SERVER_ERROR);
+    }
+}
+
+if (!function_exists('responseNotFound')) {
+
+    function responseNotFound(string $message = 'Data tidak ada')
+    {
+        return responseError($message, Response::HTTP_NOT_FOUND);
+    }
+}
+
+if (!function_exists('responseBadRequest')) {
+
+    function responseBadRequest(string $message = 'Bad Request')
+    {
+        return responseError($message, Response::HTTP_BAD_REQUEST);
+    }
+}
+
+if (!function_exists('responseUnprossableContent')) {
+
+    function responseUnprossableContent(string $message = 'Unprocessable Content')
+    {
+        return responseError($message, Response::HTTP_UNPROCESSABLE_ENTITY);
+    }
+}
+
 if (!function_exists('responseUnauthorized')) {
 
-    function responseUnauthorized(string $message = 'Unauthorized', $http = Response::HTTP_UNAUTHORIZED)
+    function responseUnauthorized(string $message = 'Unauthorized')
     {
-        $body = array_merge(['status_code' => $http, 'status_message' => Response::$statusTexts[$http]]);
+        return responseError($message, Response::HTTP_UNAUTHORIZED);
+    }
+}
 
-        return responseJson(array_merge($body, ['status' => false, 'message' => $message]), $http);
+if (!function_exists('responseForbidden')) {
+
+    function responseForbidden(string $message = 'Forbidden')
+    {
+        return responseError($message, Response::HTTP_FORBIDDEN);
     }
 }
 
@@ -91,5 +135,35 @@ if (!function_exists('parseDate')) {
         } else {
             return null;
         }
+    }
+}
+
+if (!function_exists('removeKeysFromPagination')) {
+    function removeKeysFromPagination($object, ?array $remove_array_keys = []): array
+    {
+        // default removed keys
+        $default_removed_keys = [
+            'from', 'links', 'first_page_url', 'last_page_url', 'options', 'to', 'last_page'
+        ];
+
+        // merge array
+        $remove_array_keys = array_merge($remove_array_keys, $default_removed_keys);
+
+        // convert to array
+        $data = $object->toArray();
+
+        return removeKeysFromArray($data, $remove_array_keys);
+    }
+}
+
+if (!function_exists('removeKeysFromArray')) {
+    function removeKeysFromArray(array $data, array $remove_array_keys): array
+    {
+        // remove key use foreach
+        foreach ($remove_array_keys as $key) {
+            unset($data[$key]);
+        }
+
+        return $data;
     }
 }
