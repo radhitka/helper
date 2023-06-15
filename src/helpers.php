@@ -167,3 +167,32 @@ if (!function_exists('removeKeysFromArray')) {
         return $data;
     }
 }
+
+if (!function_exists('validateDate')) {
+    function validateDate($date, $format = 'd/m/Y')
+    {
+        $d = DateTime::createFromFormat('!' . $format, $date);
+
+        $check = $d && $d->format($format) == $date;
+        if ($check) {
+            $new_date = formatingDate($date);
+
+            return date('Y-m-d', strtotime($new_date));
+        } else {
+            return null;
+        }
+    }
+}
+
+if (!function_exists('formatingDate')) {
+    function formatingDate($date): array|string
+    {
+        $array = [
+            ' ', ')', '(', '/', ',', '&', '%', '`',
+            '~', '?', '<', '>', '"', '[', ']', '{', '}', ':',
+            '!', '@', '#', '$', '^', '*', '-', '_', '+', '=',
+            `'\'`, '|', `'`, ';'
+        ];
+        return str_replace($array, '-', $date);
+    }
+}
