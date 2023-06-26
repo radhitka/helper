@@ -59,17 +59,25 @@ if (!function_exists('responseSuccessCreated')) {
 
 if (!function_exists('responseError')) {
 
-    function responseError(string $message = 'Error', $http = Response::HTTP_INTERNAL_SERVER_ERROR)
+    function responseError(string|array $body = "Error", $http = Response::HTTP_INTERNAL_SERVER_ERROR)
     {
-        $body = array_merge(['status_code' => $http, 'status_message' => Response::$statusTexts[$http]]);
+        if (is_string($body)) {
+            $body = ['status' => false, 'message' => $body];
+        } elseif (array_key_exists("status", $body) && array_key_exists("message", $body)) {
+            $body = $body;
+        } else {
+            $body = array_merge(['status' => false, 'message' => 'Error'], $body);
+        }
 
-        return responseJson(array_merge($body, ['status' => false, 'message' => $message]), $http);
+        $body = array_merge(['status_code' => $http, 'status_message' => Response::$statusTexts[$http]], $body);
+
+        return responseJson($body, $http);
     }
 }
 
 if (!function_exists('responseInternalServerError')) {
 
-    function responseInternalServerError(string $message = 'Internal Server Error')
+    function responseInternalServerError(string|array $message = 'Internal Server Error')
     {
         return responseError($message, Response::HTTP_INTERNAL_SERVER_ERROR);
     }
@@ -77,7 +85,7 @@ if (!function_exists('responseInternalServerError')) {
 
 if (!function_exists('responseNotFound')) {
 
-    function responseNotFound(string $message = 'Data tidak ada')
+    function responseNotFound(string|array $message = 'Data tidak ada')
     {
         return responseError($message, Response::HTTP_NOT_FOUND);
     }
@@ -85,7 +93,7 @@ if (!function_exists('responseNotFound')) {
 
 if (!function_exists('responseBadRequest')) {
 
-    function responseBadRequest(string $message = 'Bad Request')
+    function responseBadRequest(string|array $message = 'Bad Request')
     {
         return responseError($message, Response::HTTP_BAD_REQUEST);
     }
@@ -93,7 +101,7 @@ if (!function_exists('responseBadRequest')) {
 
 if (!function_exists('responseUnprossableContent')) {
 
-    function responseUnprossableContent(string $message = 'Unprocessable Content')
+    function responseUnprossableContent(string|array $message = 'Unprocessable Content')
     {
         return responseError($message, Response::HTTP_UNPROCESSABLE_ENTITY);
     }
@@ -101,7 +109,7 @@ if (!function_exists('responseUnprossableContent')) {
 
 if (!function_exists('responseUnauthorized')) {
 
-    function responseUnauthorized(string $message = 'Unauthorized')
+    function responseUnauthorized(string|array $message = 'Unauthorized')
     {
         return responseError($message, Response::HTTP_UNAUTHORIZED);
     }
@@ -109,7 +117,7 @@ if (!function_exists('responseUnauthorized')) {
 
 if (!function_exists('responseForbidden')) {
 
-    function responseForbidden(string $message = 'Forbidden')
+    function responseForbidden(string|array $message = 'Forbidden')
     {
         return responseError($message, Response::HTTP_FORBIDDEN);
     }
